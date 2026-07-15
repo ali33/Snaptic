@@ -128,7 +128,7 @@ Không tham chiếu gì dính OS. Chứa toàn bộ logic có nhánh.
 **Mô hình dữ liệu:**
 
 ```
-CaptureResult      { Image: SKBitmap, CapturedAt }
+CaptureResult      sealed class { Image: SKBitmap, CapturedAt } — KHÔNG phải record (bẫy `with`)
 BarcodeResult      { Format, Text, IsHttpUrl }
 CaptureAnalysis    { Barcode: BarcodeResult?, BarcodeStatus,
                      OcrText: string?, OcrStatus }

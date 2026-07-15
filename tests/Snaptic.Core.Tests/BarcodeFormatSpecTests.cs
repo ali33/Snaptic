@@ -103,6 +103,20 @@ public class BarcodeFormatSpecTests
         Assert.NotNull(r.Hint);
     }
 
+    [Theory]
+    [InlineData("A\0B")]      // NUL giữa chuỗi
+    [InlineData("\0")]        // chỉ NUL
+    [InlineData("ABC\0")]     // NUL cuối chuỗi
+    public void Code39_tu_choi_ky_tu_NUL(string text)
+    {
+        // Bẫy va chạm sentinel: '\0' CHÍNH LÀ default(char). Nếu dùng
+        // `FirstOrDefault(...) != default` để dò ký tự lạ thì NUL bị nhầm thành
+        // "không tìm thấy" và lọt qua như hợp lệ.
+        var r = BarcodeFormatSpec.Validate(SnapticFormat.Code39, text);
+        Assert.False(r.IsValid);
+        Assert.NotNull(r.Hint);
+    }
+
     [Fact]
     public void Hint_rong_khi_hop_le()
     {

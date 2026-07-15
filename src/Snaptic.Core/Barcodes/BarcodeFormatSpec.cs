@@ -65,11 +65,25 @@ public static class BarcodeFormatSpec
         if (text.Any(char.IsAsciiLetterLower))
             return ValidationResult.Fail("Code39 không nhận chữ thường — dùng CHỮ HOA");
 
-        var bad = text.FirstOrDefault(c => !Code39Alphabet.Contains(c));
-        if (bad != default)
+        // Vòng lặp thường, KHÔNG dùng FirstOrDefault. Mẫu `FirstOrDefault(...) != default`
+        // có bẫy va chạm sentinel: '\0' chính là default(char), nên ký tự NUL tìm thấy thật
+        // lại bị hiểu thành "không tìm thấy" và lọt qua như hợp lệ.
+        foreach (var c in text)
+        {
+            if (Code39Alphabet.Contains(c))
+                continue;
+
             return ValidationResult.Fail(
-                $"Code39 không nhận ký tự '{bad}' — chỉ A-Z, 0-9 và - . $ / + % khoảng trắng");
+                $"Code39 không nhận ký tự {Describe(c)} — chỉ A-Z, 0-9, khoảng trắng và - . $ / + %");
+        }
 
         return ValidationResult.Ok;
     }
+
+    /// <summary>
+    /// Mô tả ký tự cho lời nhắc. Ký tự điều khiển không in ra được nên hiện mã hex —
+    /// báo "không nhận ký tự ''" thì người dùng không hiểu gì.
+    /// </summary>
+    private static string Describe(char c)
+        => char.IsControl(c) ? $"mã điều khiển U+{(int)c:X4}" : $"'{c}'";
 }
