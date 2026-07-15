@@ -51,11 +51,18 @@ Những thứ sau **cố ý** không làm, kèm lý do:
 |---|---|
 | Ngôn ngữ | C# |
 | Runtime | **.NET 10** (LTS) — đã xác nhận SDK 10.0.300 có trên máy. `Core` → `net10.0`; `Windows` và `App` → `net10.0-windows10.0.19041.0` |
-| UI | Avalonia UI 11.x |
-| QR / Barcode (cả đọc lẫn tạo) | ZXing.Net |
+| UI | **Avalonia UI 12.1.0** |
+| Kiểu ảnh dùng chung | **`SKBitmap` (SkiaSharp 3.119.4)** — xem ghi chú dưới |
+| QR / Barcode (cả đọc lẫn tạo) | **ZXing.Net 0.16.11** qua **ZXing.Net.Bindings.SkiaSharp 0.16.22** |
 | OCR | `Windows.Media.Ocr` qua CsWinRT |
 | DI | `Microsoft.Extensions.DependencyInjection` |
 | Test | xUnit |
+
+**Đã xác minh bằng build thật (2026-07-15), không phải phỏng đoán:** Avalonia 12.1.0 + ZXing.Net.Bindings.SkiaSharp 0.16.22 cùng hội tụ về SkiaSharp 3.119.4, restore và build trên `net10.0` cho 0 lỗi 0 cảnh báo.
+
+**Vì sao `SKBitmap` làm kiểu ảnh của `Core`:** `System.Drawing` chỉ chạy Windows nên vi phạm luật "Core không dính OS". Core cần một kiểu ảnh để: nhận từ `IScreenCapture`, đưa cho ZXing decode, encode PNG cho Data URI và Save.
+
+SkiaSharp giải cả bốn: chạy mọi OS (**không phải coupling với OS**, chỉ là một thư viện), ZXing có binding sẵn nên không phải tự viết cầu nối, encode PNG sẵn có, và **Avalonia vốn đã dùng Skia** nên không thêm phụ thuộc native nào — cùng một `libSkiaSharp` mà app đã nạp.
 
 ### Vì sao chọn stack này
 
@@ -121,7 +128,7 @@ Không tham chiếu gì dính OS. Chứa toàn bộ logic có nhánh.
 **Mô hình dữ liệu:**
 
 ```
-CaptureResult      { Image, CapturedAt }
+CaptureResult      { Image: SKBitmap, CapturedAt }
 BarcodeResult      { Format, Text, IsHttpUrl }
 CaptureAnalysis    { Barcode: BarcodeResult?, BarcodeStatus,
                      OcrText: string?, OcrStatus }
