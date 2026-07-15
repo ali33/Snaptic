@@ -47,3 +47,4 @@ $RECYCLE.BIN/
 # Ảnh dùng cho test decode thì PHẢI commit (tests/fixtures) — đừng ignore.
 *.log
 .superpowers/
+.omc/

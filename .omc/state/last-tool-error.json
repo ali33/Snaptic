@@ -1,7 +1,0 @@
-{
-  "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"cd D:/META/_MyVibeApps/Snaptic && dotnet sln add src/Snaptic.Core/Snaptic.Core.csproj tests/Snaptic.Core.Tests/Snaptic.Core.Tests.csproj\",\"description\":\"Add both projects to the classic so...",
-  "error": "Exit code 1\nFound more than one solution file in D:\\META\\_MyVibeApps\\Snaptic\\. Specify which one to use.",
-  "timestamp": "2026-07-15T10:13:08.447Z",
-  "retry_count": 1
-}
