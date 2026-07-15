@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Snaptic.Core/Snaptic.Core.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Snaptic.Core.Tests/Snaptic.Core.Tests.csproj" />
+  </Folder>
+</Solution>
