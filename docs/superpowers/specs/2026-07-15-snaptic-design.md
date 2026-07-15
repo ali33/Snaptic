@@ -27,7 +27,7 @@ Thành công nghĩa là: bấm `Ctrl+Alt+Q`, khoanh vùng, và trong dưới m�
 | Nền tảng | **Chỉ Windows.** Chọn stack cross-platform để sau này thêm macOS không phải viết lại |
 | Kích hoạt | Phím tắt toàn cục (mặc định `Ctrl+Alt+Q`) + menu chuột phải ở tray |
 | Chụp | Khoanh vùng tự do, hỗ trợ đa màn hình, hỗ trợ DPI scaling khác nhau |
-| Nhận diện | QR, barcode 1D, OCR text |
+| Nhận diện | QR, barcode 1D, OCR text — **OCR mặc định chỉ tiếng Anh**; cài thêm được 34 ngôn ngữ khác qua Windows Settings; **không có tiếng Việt** (§8 R1) |
 | Hành động | Copy ảnh · Save file · Copy Data URI · Copy QR/barcode text · Copy OCR text · Open link |
 | Tạo mã | QR, Code128, EAN-13, UPC-A, Code39 |
 | Cấu hình | Đổi phím tắt, chọn ngôn ngữ OCR, thư mục lưu mặc định |
@@ -42,6 +42,7 @@ Những thứ sau **cố ý** không làm, kèm lý do:
 - **Annotate / crop / vẽ lên ảnh** — không thuộc mục đích app.
 - **Lịch sử ảnh đã chụp** — chưa có nhu cầu.
 - **OCR nhiều ngôn ngữ cùng lúc** — Windows OCR mỗi engine một ngôn ngữ.
+- **OCR tiếng Việt** — Windows OCR không có gói tiếng Việt (đã kiểm chứng, §8 R1). Đã cân nhắc Tesseract và **chủ động từ chối**: không đáng đổi lấy 15–30MB model + phụ thuộc native. Kiến trúc để ngỏ đường thêm sau.
 - **Test UI tự động (Avalonia.Headless)** — không đáng cho tool cá nhân; giữ ViewModel mỏng và test ViewModel.
 
 ## 3. Nền tảng kỹ thuật
@@ -49,7 +50,7 @@ Những thứ sau **cố ý** không làm, kèm lý do:
 | Hạng mục | Lựa chọn |
 |---|---|
 | Ngôn ngữ | C# |
-| Runtime | Bản .NET LTS hiện hành — xác nhận bằng `dotnet --list-sdks` khi khởi tạo |
+| Runtime | **.NET 10** (LTS) — đã xác nhận SDK 10.0.300 có trên máy. `Core` → `net10.0`; `Windows` và `App` → `net10.0-windows10.0.19041.0` |
 | UI | Avalonia UI 11.x |
 | QR / Barcode (cả đọc lẫn tạo) | ZXing.Net |
 | OCR | `Windows.Media.Ocr` qua CsWinRT |
@@ -313,15 +314,37 @@ Phần platform cần màn hình/OS thật:
 
 ## 8. Rủi ro
 
-### R1 — Windows OCR có thể không hỗ trợ tiếng Việt *(cao, phải kiểm chứng trước tiên)*
+### R1 — Windows OCR không hỗ trợ tiếng Việt *(ĐÃ KIỂM CHỨNG 2026-07-15 — xác nhận có thật, đã chấp nhận)*
 
-Windows OCR chỉ đọc được ngôn ngữ **đã cài gói OCR** trên máy. Tiếng Anh gần như luôn có. **Tiếng Việt thì chưa xác nhận.** Người dùng đã nói cần OCR tiếng Việt.
+**Kết quả kiểm chứng.** Chạy trên máy người dùng (Windows 11 build 26200):
 
-Nếu không có, lựa chọn Windows OCR trong spec này **sai** và phải quay sang Tesseract (có `vie`, kém chính xác hơn, phải bó model vào app).
+```powershell
+# Đã cài:
+[Windows.Media.Ocr.OcrEngine]::AvailableRecognizerLanguages   # → chỉ en-US
 
-**Phép thử kiểm chứng — việc đầu tiên của kế hoạch thi công, trước khi xây gì khác:** chạy `OcrEngine.AvailableRecognizerLanguages` trên chính máy người dùng và xem tiếng Việt có trong danh sách không. Vài chục dòng.
+# Windows CÓ những gói OCR nào (PowerShell Admin):
+Get-WindowsCapability -Online | Where-Object { $_.Name -Like 'Language.OCR*' }
+# → 35 gói: ar-SA, bg-BG, bs-LATN-BA, cs-CZ, da-DK, de-DE, el-GR, en-GB,
+#   en-US, es-ES, es-MX, fi-FI, fr-CA, fr-FR, hr-HR, hu-HU, it-IT, ja-JP,
+#   ko-KR, nb-NO, nl-NL, pl-PL, pt-BR, pt-PT, ro-RO, ru-RU, sk-SK, sl-SI,
+#   sr-CYRL-RS, sr-LATN-RS, sv-SE, tr-TR, zh-CN, zh-HK, zh-TW
+# → KHÔNG có vi-VN
+```
 
-Tính năng "liệt kê ngôn ngữ OCR" (§5.5) khiến app tự trả lời câu hỏi này lúc chạy, nhưng **chỉ trả lời, không giải quyết** — nếu thiếu thì vẫn là thiếu.
+**Kết luận: Windows OCR không đọc được tiếng Việt.** Không phải "chưa cài" — Microsoft không phát hành gói OCR tiếng Việt. Cài gì cũng không có.
+
+**Quyết định: chấp nhận, giữ nguyên Windows OCR.** Không chuyển sang Tesseract. Đánh đổi đã cân nhắc:
+
+- **Được:** không phải bó model 15–30MB vào app; độ chính xác Windows OCR cao hơn Tesseract trên các ngôn ngữ nó hỗ trợ; không thêm phụ thuộc native nào.
+- **Mất:** OCR tiếng Việt — vĩnh viễn, không có đường vòng trong phạm vi này.
+
+**Hệ quả với thiết kế:** không thay đổi gì. `ITextRecognizer` vẫn ở tầng `Windows`, tầng platform vẫn 4 interface.
+
+- Mặc định OCR ra **en-US** (luật §5.5 đã đúng sẵn: ngôn ngữ hệ thống `vi-VN` không có trong danh sách → tự lùi về tiếng Anh).
+- Người dùng **cài thêm được 34 gói kia** qua Windows Settings; dropdown §5.5 tự nhặt vào, không cần sửa code.
+- Tính năng "liệt kê ngôn ngữ OCR" (§5.5) chính là cách app nói thật chuyện này — nó không giấu việc tiếng Việt vắng mặt.
+
+**Nếu sau này cần OCR tiếng Việt thật:** thêm `TesseractTextRecognizer` hiện thực cùng `ITextRecognizer` và cho chọn engine trong settings. Kiến trúc đã sẵn sàng; đây là việc thêm, không phải việc sửa.
 
 ### R2 — Clipboard ảnh trên Avalonia
 
@@ -348,3 +371,5 @@ Ca khó nhất và chỉ lộ ra trên máy có scaling ≠ 100%. Giảm rủi r
 | Phím tắt bắt buộc có phím bổ trợ | Phím trần biến mọi lần gõ chữ đó thành lệnh chụp |
 | Tạo mã dùng lại `PreviewWindow` | Mã tạo ra cũng chỉ là ảnh. Truyền analysis rỗng, không cần cờ chế độ |
 | Bỏ test UI tự động | Không đáng cho tool cá nhân; ViewModel mỏng và test ViewModel là đủ |
+| **Chấp nhận không có OCR tiếng Việt** | Đã kiểm chứng: Windows OCR không phát hành gói `vi-VN` (§8 R1). Từ chối Tesseract vì không đáng đổi lấy 15–30MB model + phụ thuộc native. Thêm sau được, kiến trúc đã sẵn |
+| **.NET 10, `App` mang TFM Windows** | `App` phải tham chiếu `Snaptic.Windows` để nạp DI → buộc mang TFM `net10.0-windows…`. Hệ quả: thêm macOS sau này cần multi-target `App` + đăng ký DI theo điều kiện, **không chỉ "đổi một dòng"** như §4 nói. `Core` vẫn sạch, nên đây là việc vặt ở tầng App, không phải viết lại |
