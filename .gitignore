@@ -1,0 +1,48 @@
+# Build output
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]64/
+publish/
+artifacts/
+
+# .NET
+*.user
+*.suo
+*.userprefs
+project.lock.json
+project.fragment.lock.json
+
+# IDE
+.vs/
+.vscode/
+.idea/
+*.swp
+
+# Test / coverage
+[Tt]est[Rr]esult*/
+coverage*.json
+coverage*.xml
+*.coverage
+*.trx
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+!packages/build/
+
+# OS
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# Snaptic — local runtime artifacts
+# Config sống ở %AppData%\Snaptic, không nằm trong repo.
+# Ảnh dùng cho test decode thì PHẢI commit (tests/fixtures) — đừng ignore.
+*.log
