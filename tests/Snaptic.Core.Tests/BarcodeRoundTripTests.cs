@@ -21,6 +21,34 @@ public class BarcodeRoundTripTests
         Assert.Equal(text, result!.Text);
     }
 
+    [Theory]
+    [InlineData("Xin chào các bạn, đây là một đoạn tiếng Việt khá dài để ép QR lên version cao hơn nhiều")]
+    [InlineData("Đường Trần Hưng Đạo, Quận 1, Thành phố Hồ Chí Minh — https://example.com/rất/dài/lắm?q=xin+chào")]
+    public void Qr_tieng_Viet_DAI_van_doc_lai_duoc(string text)
+    {
+        // Chữ Việt tốn nhiều byte hơn ASCII trong UTF-8 nên đẩy QR lên version cao.
+        // Đây là chỗ mà phép đo module và lúc render PHẢI đồng ý với nhau: nếu đo
+        // không truyền cùng hints thì ra số module khác (đo được 29 vs 33 cho một
+        // chuỗi ngắn), và ta tính kích thước dựa trên số sai.
+        using var bitmap = BarcodeGenerator.Generate(SnapticFormat.Qr, text);
+        var result = _decoder.Decode(bitmap);
+
+        Assert.NotNull(result);
+        Assert.Equal(text, result!.Text);
+    }
+
+    [Fact]
+    public void Code128_noi_dung_rat_dai_van_doc_lai_duoc()
+    {
+        // moduleCount vượt xa bề rộng mong muốn 400px → scale phải sàn về 1,
+        // không được thành 0 (chia cho 0 hoặc ảnh rộng 0px).
+        var longText = new string('A', 200);
+        using var bitmap = BarcodeGenerator.Generate(SnapticFormat.Code128, longText);
+
+        Assert.True(bitmap.Width > 400, $"ảnh phải rộng hơn 400px, đang {bitmap.Width}");
+        Assert.Equal(longText, _decoder.Decode(bitmap)!.Text);
+    }
+
     [Fact]
     public void Ean13_tao_tu_12_so_doc_lai_ra_13_so_kem_so_kiem_tra()
     {
