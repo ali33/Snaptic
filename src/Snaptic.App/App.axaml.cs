@@ -109,13 +109,13 @@ public partial class App : Application
         try
         {
             var coordinator = _services!.GetRequiredService<Services.CaptureCoordinator>();
-            using var result = await coordinator.CaptureRegionAsync();
+            // KHÔNG using: quyền sở hữu ảnh chuyển sang PreviewWindow, nó dispose khi đóng.
+            var result = await coordinator.CaptureRegionAsync();
 
             if (result is null)
                 return;   // người dùng huỷ hoặc vùng quá nhỏ
 
-            // Task 14 mở PreviewWindow ở đây.
-            Console.WriteLine($"Đã chụp {result.Image.Width}x{result.Image.Height} lúc {result.CapturedAt:HH:mm:ss}");
+            ShowPreview(result.Image, new Snaptic.Core.Recognition.CaptureAnalysis(), runRecognition: true);
         }
         catch (Exception ex)
         {
@@ -125,6 +125,36 @@ public partial class App : Application
         {
             _capturing = false;
         }
+    }
+
+
+    /// <summary>
+    /// Mở cửa sổ preview. <paramref name="runRecognition"/> = false cho đường tạo mã —
+    /// vừa tự gõ text ra mã thì đọc lại vô nghĩa.
+    /// </summary>
+    private void ShowPreview(
+        SkiaSharp.SKBitmap image,
+        Snaptic.Core.Recognition.CaptureAnalysis analysis,
+        bool runRecognition)
+    {
+        var services = _services!;
+        var settings = services.GetRequiredService<SettingsService>().Load();
+
+        var vm = new ViewModels.PreviewViewModel(
+            image,
+            analysis,
+            services.GetRequiredService<Snaptic.Core.Recognition.RecognitionService>(),
+            services.GetRequiredService<IClipboardService>(),
+            settings);
+
+        var window = new Views.PreviewWindow(vm);
+        window.Show();
+
+        // Chạy nhận diện SAU khi cửa sổ đã hiện — không để OCR làm khựng.
+        // Cửa sổ tự giữ Task và CancellationTokenSource để lúc đóng còn huỷ và chờ
+        // dừng hẳn trước khi giải phóng ảnh.
+        if (runRecognition)
+            window.StartRecognition();
     }
 
     // Hai hàm dưới được nối vào ở Task 15, 16.
