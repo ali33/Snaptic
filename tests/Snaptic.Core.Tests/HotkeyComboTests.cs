@@ -36,6 +36,26 @@ public class HotkeyComboTests
     public void Tu_choi_khi_khong_co_phim_chinh(string? key)
         => Assert.False(new HotkeyCombo(HotkeyModifiers.Control, key!).IsValid);
 
+    [Theory]
+    [InlineData("D1")]      // tên thô của Avalonia cho phím số — chưa chuẩn hoá
+    [InlineData("Escape")]  // Windows giữ riêng
+    [InlineData("OemPlus")]
+    [InlineData("KhongCoThat")]
+    public void Tu_choi_ten_phim_khong_ho_tro(string key)
+    {
+        // IsValid phải kiểm cả TÊN PHÍM, không chỉ "khác rỗng". Chỉ kiểm rỗng thì "D1"
+        // lọt qua đây rồi chết ở tầng Windows, và app đổ lỗi nhầm cho "ứng dụng khác".
+        Assert.False(new HotkeyCombo(HotkeyModifiers.Control, key).IsValid);
+    }
+
+    [Theory]
+    [InlineData("A")]
+    [InlineData("1")]
+    [InlineData("F5")]
+    [InlineData("Space")]
+    public void Chap_nhan_ten_phim_da_chuan_hoa(string key)
+        => Assert.True(new HotkeyCombo(HotkeyModifiers.Control, key).IsValid);
+
     [Fact]
     public void ToString_hien_thi_doc_duoc()
         => Assert.Equal("Ctrl+Alt+Q", HotkeyCombo.Default.ToString());

@@ -38,6 +38,10 @@ public class SettingsViewModelTests : IDisposable
         public event EventHandler? Pressed;
         public bool TryRegister(HotkeyCombo combo)
         {
+            // PHẢI khớp hợp đồng của WindowsHotkey: đăng ký hỏng thì KHÔNG đụng tới
+            // đăng ký đang có. Bản fake cũ giữ nguyên Registered trong mọi trường hợp,
+            // trong khi bản thật lúc đó lại XOÁ nó — fake mô hình một hợp đồng mà bản
+            // thật không tuân, nên bug "gán hụt là mất phím tắt" vô hình với bộ test.
             if (!NextRegisterSucceeds) return false;
             Registered = combo;
             return true;
@@ -123,11 +127,38 @@ public class SettingsViewModelTests : IDisposable
         var vm = Build(hotkey: hotkey);
         var before = vm.Hotkey;
 
+        // Phím cũ phải đang ĐƯỢC ĐĂNG KÝ THẬT trước khi thử — nếu không thì assert
+        // dưới đây không chứng minh được gì.
+        vm.RestoreHotkey();
+        Assert.Equal(before, hotkey.Registered);
+
         hotkey.NextRegisterSucceeds = false;
 
         Assert.False(vm.TryChangeHotkey(new HotkeyCombo(HotkeyModifiers.Control, "C")));
-        Assert.Equal(before, vm.Hotkey);                       // KHÔNG được im lặng nhận
+        Assert.Equal(before, vm.Hotkey);
         Assert.Contains("ứng dụng khác", vm.HotkeyError);
+
+        // ĐÂY mới là câu hỏi mà tên test hứa. Assert vào vm.Hotkey ở trên là đúng theo
+        // cấu trúc (TryChangeHotkey chỉ gán khi thành công) nên không bao giờ đỏ được —
+        // nó không hỏi gì cả. Câu hỏi thật: phím tắt CÒN SỐNG ở tầng dưới không?
+        Assert.Equal(before, hotkey.Registered);
+    }
+
+    [Fact]
+    public void Phim_khong_ho_tro_bi_tu_choi_va_KHONG_dung_toi_dang_ky_hien_co()
+    {
+        // Avalonia gọi phím số là "D1". Trước đây nó lọt qua IsValid rồi chết ở tầng
+        // Windows, và app đổ lỗi cho "ứng dụng khác" — sai sự thật.
+        var hotkey = new FakeHotkey();
+        var vm = Build(hotkey: hotkey);
+        vm.RestoreHotkey();
+        var before = hotkey.Registered;
+
+        Assert.False(vm.TryChangeHotkey(new HotkeyCombo(HotkeyModifiers.Control, "Escape")));
+
+        Assert.Equal(before, hotkey.Registered);
+        Assert.NotNull(vm.HotkeyError);
+        Assert.DoesNotContain("ứng dụng khác", vm.HotkeyError);   // phải nói ĐÚNG lý do
     }
 
     [Fact]

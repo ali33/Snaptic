@@ -106,7 +106,11 @@ public partial class SettingsWindow : Window
         if (e.KeyModifiers.HasFlag(KeyModifiers.Shift)) mods |= HotkeyModifiers.Shift;
         if (e.KeyModifiers.HasFlag(KeyModifiers.Meta)) mods |= HotkeyModifiers.Win;
 
-        _vm.TryChangeHotkey(new HotkeyCombo(mods, e.Key.ToString()));
+        // Chuẩn hoá tên phím của Avalonia sang tên chuẩn của Snaptic. Avalonia gọi phím
+        // số là "D1" — đưa thẳng vào là không bao giờ gán được Ctrl+Alt+1, và tên enum
+        // thô sẽ lòi ra trong thông báo lỗi cho người dùng đọc.
+        var key = HotkeyKey.Normalize(e.Key.ToString()) ?? e.Key.ToString();
+        _vm.TryChangeHotkey(new HotkeyCombo(mods, key));
         Sync();
     }
 

@@ -88,14 +88,25 @@ public sealed class SettingsViewModel : INotifyPropertyChanged
     /// </summary>
     public bool TryChangeHotkey(HotkeyCombo combo)
     {
-        if (!combo.IsValid)
+        // Ba lý do hỏng KHÁC NHAU, phải nói đúng cái nào. Gộp hết thành "bị ứng dụng
+        // khác dùng" là nói dối người dùng: bấm Ctrl+Alt+1 chẳng đụng ai cả.
+        if (combo.Modifiers == HotkeyModifiers.None)
         {
             SetHotkeyError("Phím tắt phải có ít nhất một phím bổ trợ (Ctrl, Alt, Shift hoặc Win)");
             return false;
         }
 
+        if (!HotkeyKey.CanNormalize(combo.Key))
+        {
+            SetHotkeyError($"Không dùng được phím này làm phím tắt — giữ nguyên {_hotkey}");
+            return false;
+        }
+
         if (!_hotkeyService.TryRegister(combo))
         {
+            // Tới đây thì tổ hợp hợp lệ mà OS vẫn từ chối, nên "bị chiếm" là đúng sự
+            // thật. WindowsHotkey đăng ký phím mới TRƯỚC khi gỡ phím cũ, nên câu
+            // "giữ nguyên" cũng đúng — không phải lời hứa suông.
             SetHotkeyError($"Tổ hợp {combo} đang bị ứng dụng khác dùng — giữ nguyên {_hotkey}");
             return false;
         }
