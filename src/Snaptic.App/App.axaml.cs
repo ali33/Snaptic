@@ -1,3 +1,4 @@
+using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -6,6 +7,7 @@ using Avalonia.Platform;
 using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Snaptic.Core.Abstractions;
+using Snaptic.Core.Recognition;
 using Snaptic.Core.Settings;
 
 namespace Snaptic.App;
@@ -161,6 +163,25 @@ public partial class App : Application
 
 
     /// <summary>
+    /// Điền ngôn ngữ OCR mặc định khi người dùng chưa tự chọn.
+    ///
+    /// KHÔNG ghi xuống config: đây là suy luận lúc chạy, không phải lựa chọn của người
+    /// dùng. Ghi xuống thì hôm nay chọn en-US, mai họ cài thêm gói tiếng Nhật, app vẫn
+    /// bám en-US vì "đã có trong config rồi". Chỉ ghi khi họ tự chọn ở màn Cài đặt.
+    /// </summary>
+    private AppSettings ResolveOcrLanguage(AppSettings settings)
+    {
+        if (settings.OcrLanguage is not null)
+            return settings;
+
+        var recognizer = _services!.GetRequiredService<ITextRecognizer>();
+        var picked = OcrLanguagePicker.Pick(
+            recognizer.GetAvailableLanguages(), CultureInfo.CurrentUICulture.Name);
+
+        return settings with { OcrLanguage = picked };
+    }
+
+    /// <summary>
     /// Mở cửa sổ preview. <paramref name="runRecognition"/> = false cho đường tạo mã —
     /// vừa tự gõ text ra mã thì đọc lại vô nghĩa.
     /// </summary>
@@ -170,7 +191,7 @@ public partial class App : Application
         bool runRecognition)
     {
         var services = _services!;
-        var settings = services.GetRequiredService<SettingsService>().Load();
+        var settings = ResolveOcrLanguage(services.GetRequiredService<SettingsService>().Load());
 
         var vm = new ViewModels.PreviewViewModel(
             image,
