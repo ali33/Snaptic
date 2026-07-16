@@ -27,13 +27,38 @@ public partial class App : Application
             desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
             _services = ServiceRegistration.Build();
-            var settings = _services.GetRequiredService<SettingsService>().Load();
+            var settingsService = _services.GetRequiredService<SettingsService>();
+            var settings = settingsService.Load();
 
+            ApplyFirstRunDefaults(settingsService, settings);
             SetupTray(desktop);
             SetupHotkey(settings.Hotkey);
         }
 
         base.OnFrameworkInitializationCompleted();
+    }
+
+    /// <summary>
+    /// Mặc định chỉ áp MỘT LẦN, ở lần chạy đầu tiên trên máy.
+    ///
+    /// Khởi động cùng Windows mặc định BẬT. Nhưng chỉ ở lần đầu: người dùng tự tắt đi
+    /// rồi mà lần sau app bật lại thì đó là app cãi lời chủ. Ghi config ngay để lần sau
+    /// IsFirstRun thành false, kể cả khi họ chưa đổi cài đặt gì.
+    /// </summary>
+    private void ApplyFirstRunDefaults(SettingsService settingsService, AppSettings settings)
+    {
+        if (!settingsService.IsFirstRun)
+            return;
+
+        var startup = _services!.GetRequiredService<IStartupService>();
+        if (!startup.TrySetEnabled(true))
+        {
+            // Chính sách hệ thống có thể khoá khoá Run. Không bật được thì thôi,
+            // không phải lý do từ chối khởi động.
+            Console.Error.WriteLine("Không bật được khởi động cùng Windows.");
+        }
+
+        settingsService.Save(settings);
     }
 
     private void SetupTray(IClassicDesktopStyleApplicationLifetime desktop)

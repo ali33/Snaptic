@@ -20,6 +20,21 @@ public class SettingsServiceTests : IDisposable
     }
 
     [Fact]
+    public void IsFirstRun_dung_khi_chua_co_file_config()
+    {
+        Assert.True(new SettingsService(_path).IsFirstRun);
+    }
+
+    [Fact]
+    public void IsFirstRun_sai_sau_khi_da_luu()
+    {
+        var service = new SettingsService(_path);
+        service.Save(new AppSettings());
+
+        Assert.False(service.IsFirstRun);
+    }
+
+    [Fact]
     public void File_khong_ton_tai_tra_ve_mac_dinh()
     {
         var service = new SettingsService(_path);

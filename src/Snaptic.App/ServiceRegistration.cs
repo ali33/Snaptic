@@ -29,6 +29,7 @@ public static class ServiceRegistration
         services.AddSingleton<ITextRecognizer, WindowsOcr>();
         services.AddSingleton<IClipboardService, WindowsClipboard>();
         services.AddSingleton<IHotkeyService, WindowsHotkey>();
+        services.AddSingleton<IStartupService, WindowsStartupService>();
 
         // ---- Core ----
         services.AddSingleton<BarcodeDecoder>();

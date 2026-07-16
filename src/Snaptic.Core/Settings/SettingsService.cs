@@ -26,6 +26,13 @@ public sealed class SettingsService
         Environment.GetFolderPath(Environment.SpecialFolder.MyPictures),
         "Snaptic");
 
+    /// <summary>
+    /// Chưa từng lưu config lần nào — tức lần chạy đầu tiên trên máy này.
+    /// Dùng để áp mặc định chỉ-một-lần (vd bật khởi động cùng Windows). Sau khi người
+    /// dùng đã tự tắt đi thì KHÔNG được bật lại, nên luật đó chỉ chạy khi cờ này đúng.
+    /// </summary>
+    public bool IsFirstRun => !File.Exists(_configPath);
+
     public AppSettings Load()
     {
         try
