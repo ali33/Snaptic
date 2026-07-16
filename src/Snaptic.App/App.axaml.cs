@@ -84,6 +84,10 @@ public partial class App : Application
         settingsItem.Click += (_, _) => OnSettingsRequested();
         menu.Add(settingsItem);
 
+        var aboutItem = new NativeMenuItem("Giới thiệu...");
+        aboutItem.Click += (_, _) => OnAboutRequested();
+        menu.Add(aboutItem);
+
         var exitItem = new NativeMenuItem("Thoát");
         exitItem.Click += (_, _) => Shutdown(desktop);
         menu.Add(exitItem);
@@ -246,6 +250,10 @@ public partial class App : Application
 
         window.Show();
     }
+    private void OnAboutRequested()
+        => new Views.AboutWindow(
+            new ViewModels.AboutViewModel(_services!.GetRequiredService<IClipboardService>())).Show();
+
     private void OnSettingsRequested()
     {
         var services = _services!;

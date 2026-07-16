@@ -3,6 +3,14 @@
 App tray Windows: chụp vùng màn hình → nhận diện nội dung → hành động theo ngữ cảnh.
 Kèm chiều ngược lại: nhập text → tạo mã QR/barcode.
 
+## Giới thiệu
+
+**Snaptic** là phần mềm được phát triển và trân trọng dành tặng đồng chí
+**Vũ Diệu Huyền – UBND xã Đan Phượng**.
+
+Phần mềm hỗ trợ chụp nhanh vùng màn hình, nhận diện nội dung và tạo mã QR, góp phần
+nâng cao sự thuận tiện và hiệu quả trong công việc hằng ngày.
+
 Điểm khác biệt so với ShareX / Lightshot / Snipping Tool không nằm ở việc chụp, mà ở
 chỗ **app hiểu được nội dung nó vừa chụp**.
 
@@ -77,3 +85,20 @@ thuần. Phá ranh giới là lựa chọn đó vô nghĩa.
 - [Thiết kế đầy đủ](docs/superpowers/specs/2026-07-15-snaptic-design.md) — quyết định và lý do
 - [Kế hoạch thi công](docs/superpowers/plans/2026-07-15-snaptic.md) — 17 task
 - [Checklist kiểm thử tay](docs/manual-test-checklist.md)
+
+## Ủng hộ tác giả
+
+Nếu Snaptic giúp ích cho công việc của bạn, mời tác giả một ly cà phê:
+
+<img src="docs/tk-techcombank.png" alt="QR chuyển khoản Techcombank" width="300">
+
+| | |
+|---|---|
+| Ngân hàng | Techcombank |
+| Chủ tài khoản | NGUYEN DUC SON |
+| Số tài khoản | `7030456789` |
+
+Quét mã bằng app ngân hàng bất kỳ có hỗ trợ VietQR / napas 247. Mã đã điền sẵn số tiền
+và nội dung — sửa lại được trước khi xác nhận.
+
+Trong app: **chuột phải icon khay → Giới thiệu...**
