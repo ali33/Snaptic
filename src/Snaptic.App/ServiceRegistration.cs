@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Snaptic.App.Services;
 using Snaptic.Core.Abstractions;
 using Snaptic.Core.Barcodes;
 using Snaptic.Core.Recognition;
@@ -33,6 +34,9 @@ public static class ServiceRegistration
         services.AddSingleton<BarcodeDecoder>();
         services.AddSingleton<RecognitionService>();
         services.AddSingleton(_ => new SettingsService(SettingsService.DefaultConfigPath));
+
+        // ---- App ----
+        services.AddSingleton<CaptureCoordinator>();
 
         return services.BuildServiceProvider();
     }

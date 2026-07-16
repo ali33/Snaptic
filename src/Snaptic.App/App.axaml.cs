@@ -99,8 +99,35 @@ public partial class App : Application
             "Vẫn chụp được từ menu tray.");
     }
 
-    // Ba hàm dưới được nối vào ở Task 13, 15, 16.
-    private void OnCaptureRequested() => Console.WriteLine("TODO Task 13: chụp màn hình");
+    private bool _capturing;
+
+    private async void OnCaptureRequested()
+    {
+        // Chặn bấm phím tắt chồng nhau: overlay thứ hai sẽ chụp trúng overlay thứ nhất.
+        if (_capturing) return;
+        _capturing = true;
+        try
+        {
+            var coordinator = _services!.GetRequiredService<Services.CaptureCoordinator>();
+            using var result = await coordinator.CaptureRegionAsync();
+
+            if (result is null)
+                return;   // người dùng huỷ hoặc vùng quá nhỏ
+
+            // Task 14 mở PreviewWindow ở đây.
+            Console.WriteLine($"Đã chụp {result.Image.Width}x{result.Image.Height} lúc {result.CapturedAt:HH:mm:ss}");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Lỗi khi chụp: {ex}");
+        }
+        finally
+        {
+            _capturing = false;
+        }
+    }
+
+    // Hai hàm dưới được nối vào ở Task 15, 16.
     private void OnGenerateRequested() => Console.WriteLine("TODO Task 15: tạo mã");
     private void OnSettingsRequested() => Console.WriteLine("TODO Task 16: cài đặt");
 }

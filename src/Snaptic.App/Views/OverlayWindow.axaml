@@ -1,0 +1,22 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="Snaptic.App.Views.OverlayWindow"
+        WindowDecorations="None"
+        Topmost="True"
+        ShowInTaskbar="False"
+        CanResize="False"
+        Background="Black"
+        Cursor="Cross">
+  <Canvas Name="RootCanvas" Background="Transparent">
+    <Image Name="FrozenImage" Canvas.Left="0" Canvas.Top="0" />
+    <Rectangle Name="DimLayer" Canvas.Left="0" Canvas.Top="0" Fill="#66000000" />
+    <Rectangle Name="SelectionRect"
+               Stroke="#FF3B82F6" StrokeThickness="2"
+               Fill="#22FFFFFF" IsVisible="False" />
+    <Border Name="HintBox" Canvas.Left="0" Canvas.Top="0"
+            Background="#CC101010" CornerRadius="6" Padding="14,10">
+      <TextBlock Foreground="White" FontSize="13"
+                 Text="Kéo chuột để khoanh vùng  ·  Esc để huỷ" />
+    </Border>
+  </Canvas>
+</Window>
