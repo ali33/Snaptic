@@ -11,7 +11,7 @@ Kèm chiều ngược lại: nhập text → tạo mã QR/barcode.
 </p>
 
 <p align="center">
-  <sub>Windows 10 build 19041+ · x64 · không cần cài .NET · ~230 MB</sub>
+  <sub>Windows 10 build 19041+ · x64 · không cần cài .NET · tải 75 MB</sub>
 </p>
 
 ## Giới thiệu
@@ -42,9 +42,15 @@ chỗ **app hiểu được nội dung nó vừa chụp**.
        alt="Tải bản mới nhất từ Google Drive" height="44">
 </a>
 
-Giải nén ra đâu cũng được rồi chạy `Snaptic.App.exe`. Không cần cài .NET: bản này
-**self-contained**, đã gói sẵn runtime — đổi ~230 MB đĩa lấy việc app luôn chạy được kể
-cả khi máy chưa có hoặc gỡ mất .NET. Yêu cầu Windows 10 build 19041 trở lên, x64.
+Vào thư mục phiên bản (ví dụ `1.0.0`) → tải `Snaptic Windows x64.zip` → giải nén ra đâu
+cũng được → chạy `Snaptic.App.exe`.
+
+Tải về **75 MB**, giải nén ra **~230 MB**. Không cần cài .NET: bản này **self-contained**,
+đã gói sẵn runtime — đổi chỗ trên đĩa lấy việc app luôn chạy được kể cả khi máy chưa có
+hoặc gỡ mất .NET. Yêu cầu Windows 10 build 19041 trở lên, x64.
+
+Google Drive sẽ báo **"Google Drive can't scan this file for viruses"** — mọi file trên
+25 MB đều bị vậy, không phải dấu hiệu file có vấn đề. Bấm **Download anyway**.
 
 Lần chạy đầu app **tự bật khởi động cùng Windows**. Không muốn thì tắt trong
 **Cài đặt** — app sẽ không tự bật lại.
