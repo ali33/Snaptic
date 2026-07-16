@@ -1,4 +1,4 @@
-# Publish Snaptic ra chỗ cố định và cập nhật đăng ký khởi động cùng Windows.
+﻿# Publish Snaptic ra chỗ cố định và cập nhật đăng ký khởi động cùng Windows.
 #
 # Vì sao cần script này: bản build trong artifacts/ bị xoá mỗi lần dọn repo, mà khoá Run
 # của Windows thì không biết điều đó — nó chỉ lặng lẽ không chạy được lúc đăng nhập, không
