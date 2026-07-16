@@ -7,6 +7,7 @@ using Avalonia.Platform;
 using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Snaptic.Core.Abstractions;
+using Snaptic.Core.Barcodes;
 using Snaptic.Core.Recognition;
 using Snaptic.Core.Settings;
 
@@ -72,11 +73,11 @@ public partial class App : Application
         menu.Add(captureItem);
 
         var qrItem = new NativeMenuItem("Tạo QR...");
-        qrItem.Click += (_, _) => OnGenerateRequested();
+        qrItem.Click += (_, _) => OnGenerateRequested(SnapticFormat.Qr);
         menu.Add(qrItem);
 
         var barcodeItem = new NativeMenuItem("Tạo Barcode...");
-        barcodeItem.Click += (_, _) => OnGenerateRequested();
+        barcodeItem.Click += (_, _) => OnGenerateRequested(SnapticFormat.Code128);
         menu.Add(barcodeItem);
 
         menu.Add(new NativeMenuItemSeparator());
@@ -232,6 +233,16 @@ public partial class App : Application
     }
 
     // Hai hàm dưới được nối vào ở Task 15, 16.
-    private void OnGenerateRequested() => Console.WriteLine("TODO Task 15: tạo mã");
+    private void OnGenerateRequested(SnapticFormat format)
+    {
+        var window = new Views.GeneratorWindow(format);
+
+        // Analysis RỖNG: vừa tự gõ text ra mã thì đọc lại vô nghĩa. Đây là lý do
+        // PreviewWindow nhận (ảnh, analysis) chứ không có cờ chế độ.
+        window.CodeGenerated += bitmap =>
+            ShowPreview(bitmap, CaptureAnalysis.Empty, runRecognition: false);
+
+        window.Show();
+    }
     private void OnSettingsRequested() => Console.WriteLine("TODO Task 16: cài đặt");
 }
