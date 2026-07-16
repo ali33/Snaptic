@@ -54,12 +54,10 @@ public partial class App : Application
             return;
 
         var startup = _services!.GetRequiredService<IStartupService>();
-        if (!startup.TrySetEnabled(true))
-        {
-            // Chính sách hệ thống có thể khoá khoá Run. Không bật được thì thôi,
-            // không phải lý do từ chối khởi động.
-            Console.Error.WriteLine("Không bật được khởi động cùng Windows.");
-        }
+        // Chính sách hệ thống có thể khoá khoá Run. Không bật được thì thôi — đây là
+        // mặc định tiện lợi, không phải tính năng người dùng yêu cầu, nên không đáng
+        // làm phiền bằng thông báo lúc khởi động.
+        startup.TrySetEnabled(true);
 
         settingsService.Save(settings);
     }
@@ -121,10 +119,11 @@ public partial class App : Application
             return;
 
         // Tổ hợp bị app khác chiếm. App VẪN CHẠY và vẫn chụp được từ menu tray —
-        // phím tắt hỏng không phải lý do từ chối khởi động. Task 17 thay bằng toast.
-        Console.Error.WriteLine(
+        // phím tắt hỏng không phải lý do từ chối khởi động. Nhưng phải BÁO, vì im lặng
+        // thì người dùng bấm phím tắt mãi không thấy gì mà chẳng hiểu tại sao.
+        Dispatcher.UIThread.Post(() => Views.ToastWindow.ShowStandalone(
             $"Không đăng ký được phím tắt {combo} — có ứng dụng khác đang dùng. " +
-            "Vẫn chụp được từ menu tray.");
+            "Vẫn chụp được từ menu tray, hoặc đổi phím trong Cài đặt."));
     }
 
     /// <summary>
@@ -154,7 +153,10 @@ public partial class App : Application
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"Lỗi khi chụp: {ex}");
+            // App là WinExe nên KHÔNG có console — ghi ra Console.Error là ném lỗi vào
+            // hư không. Người dùng bấm phím tắt, không thấy gì, không hiểu tại sao.
+            // Phải báo bằng thứ nhìn được.
+            Views.ToastWindow.ShowStandalone($"Lỗi khi chụp: {ex.Message}");
         }
         finally
         {
