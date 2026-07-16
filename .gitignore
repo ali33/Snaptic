@@ -46,3 +46,5 @@ $RECYCLE.BIN/
 # Config sống ở %AppData%\Snaptic, không nằm trong repo.
 # Ảnh dùng cho test decode thì PHẢI commit (tests/fixtures) — đừng ignore.
 *.log
+.superpowers/
+.omc/

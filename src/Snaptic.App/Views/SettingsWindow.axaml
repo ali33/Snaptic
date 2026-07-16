@@ -1,0 +1,46 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="Snaptic.App.Views.SettingsWindow"
+        Title="Snaptic — Cài đặt"
+        Width="470" SizeToContent="Height"
+        WindowStartupLocation="CenterScreen"
+        CanResize="False">
+  <StackPanel Margin="18" Spacing="18">
+
+    <StackPanel Spacing="4">
+      <TextBlock Text="Phím tắt chụp" FontWeight="SemiBold" />
+      <Button Name="HotkeyButton" HorizontalAlignment="Stretch"
+              HorizontalContentAlignment="Center" />
+      <TextBlock Foreground="#6B7280" FontSize="12"
+                 Text="Bấm nút rồi gõ tổ hợp phím mới" />
+      <TextBlock Name="HotkeyErrorText" Foreground="#DC2626" TextWrapping="Wrap" IsVisible="False" />
+    </StackPanel>
+
+    <StackPanel Spacing="4">
+      <TextBlock Text="Ngôn ngữ OCR" FontWeight="SemiBold" />
+      <ComboBox Name="LanguageCombo" HorizontalAlignment="Stretch" />
+      <TextBlock Name="NoLanguageText" Foreground="#DC2626" TextWrapping="Wrap" IsVisible="False"
+                 Text="Máy chưa cài gói OCR nào. Vào Windows Settings → Time &amp; Language → Language &amp; region, thêm ngôn ngữ rồi bật gói OCR trong Optional features." />
+      <TextBlock Foreground="#6B7280" FontSize="12" TextWrapping="Wrap"
+                 Text="Windows không có gói OCR tiếng Việt — chỉ đọc được các ngôn ngữ liệt kê ở trên. Chữ Việt KHÔNG DẤU thì đọc tốt; có dấu sẽ ra sai." />
+    </StackPanel>
+
+    <StackPanel Spacing="4">
+      <CheckBox Name="StartupCheck" Content="Khởi động cùng Windows" />
+      <TextBlock Name="StartupErrorText" Foreground="#DC2626" TextWrapping="Wrap" IsVisible="False" />
+    </StackPanel>
+
+    <StackPanel Spacing="4">
+      <TextBlock Text="Thư mục lưu mặc định" FontWeight="SemiBold" />
+      <DockPanel>
+        <Button Name="BrowseButton" Content="Chọn..." DockPanel.Dock="Right" Margin="8,0,0,0" />
+        <TextBox Name="FolderInput" IsReadOnly="True" />
+      </DockPanel>
+    </StackPanel>
+
+    <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
+      <Button Name="SaveButton" Content="Lưu" />
+      <Button Name="CancelButton" Content="Huỷ" />
+    </StackPanel>
+  </StackPanel>
+</Window>

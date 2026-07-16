@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v1">
+  <assemblyIdentity version="1.0.0.0" name="Snaptic.App"/>
+
+  <application xmlns="urn:schemas-microsoft-com:asm.v3">
+    <windowsSettings>
+      <!-- BẮT BUỘC: thiếu dòng này thì Windows ảo hoá toạ độ, GetSystemMetrics trả
+           kích thước sai, và ảnh chụp trên màn scaling != 100% sẽ mờ + lệch vùng.
+           Khai trong manifest (chứ không gọi API lúc chạy) vì nó có hiệu lực TRƯỚC
+           khi dòng code đầu tiên chạy — không có cửa sổ đua nào. -->
+      <dpiAwareness xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">PerMonitorV2</dpiAwareness>
+      <dpiAware xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings">true/pm</dpiAware>
+    </windowsSettings>
+  </application>
+
+  <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
+    <application>
+      <!-- Windows 10 / 11 -->
+      <supportedOS Id="{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}" />
+    </application>
+  </compatibility>
+</assembly>

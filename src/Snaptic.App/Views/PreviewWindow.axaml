@@ -1,0 +1,24 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="Snaptic.App.Views.PreviewWindow"
+        Title="Snaptic"
+        SizeToContent="WidthAndHeight"
+        MaxWidth="1200" MaxHeight="900"
+        WindowStartupLocation="CenterScreen"
+        CanResize="False">
+  <DockPanel Margin="12">
+    <WrapPanel DockPanel.Dock="Bottom" Margin="0,12,0,0">
+      <Button Name="RecaptureButton" Content="Chụp lại" Margin="0,0,8,0" />
+      <Button Name="CopyImageButton" Content="Copy ảnh" Margin="0,0,8,0" />
+      <Button Name="SaveButton" Content="Save..." Margin="0,0,8,0" />
+      <Button Name="CopyDataUriButton" Content="Copy Data URI" Margin="0,0,8,0" />
+      <Button Name="CopyCodeButton" Margin="0,0,8,0" />
+      <Button Name="OpenLinkButton" Margin="0,0,8,0" />
+      <Button Name="CopyOcrButton" Margin="0,0,8,0" />
+    </WrapPanel>
+
+    <Border BorderBrush="#40808080" BorderThickness="1">
+      <Image Name="PreviewImage" Stretch="Uniform" />
+    </Border>
+  </DockPanel>
+</Window>

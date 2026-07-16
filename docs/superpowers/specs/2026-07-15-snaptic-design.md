@@ -128,7 +128,7 @@ Không tham chiếu gì dính OS. Chứa toàn bộ logic có nhánh.
 **Mô hình dữ liệu:**
 
 ```
-CaptureResult      { Image: SKBitmap, CapturedAt }
+CaptureResult      sealed class { Image: SKBitmap, CapturedAt } — KHÔNG phải record (bẫy `with`)
 BarcodeResult      { Format, Text, IsHttpUrl }
 CaptureAnalysis    { Barcode: BarcodeResult?, BarcodeStatus,
                      OcrText: string?, OcrStatus }
@@ -190,7 +190,7 @@ Ctrl+Alt+Q  (hoặc menu tray)
    │                                                      │
    └─► Chạy nền song song:                                │
           ├─ BarcodeDecoder   ~5–20ms  ──────────────► nút mọc thêm
-          └─ Windows OCR      ~100–300ms ────────────► khi kết quả về
+          └─ Windows OCR      ~10–30ms  ────────────► khi kết quả về
 ```
 
 **Đóng băng màn hình trước, cắt sau.** Chụp toàn màn hình ngay khi bấm phím, rồi cho khoanh lên ảnh tĩnh đó. Vì: menu đang mở không biến mất, không nháy hình, vùng chọn khớp đúng thứ nhìn thấy.
@@ -349,6 +349,8 @@ Get-WindowsCapability -Online | Where-Object { $_.Name -Like 'Language.OCR*' }
 
 - Mặc định OCR ra **en-US** (luật §5.5 đã đúng sẵn: ngôn ngữ hệ thống `vi-VN` không có trong danh sách → tự lùi về tiếng Anh).
 - Người dùng **cài thêm được 34 gói kia** qua Windows Settings; dropdown §5.5 tự nhặt vào, không cần sửa code.
+- **Tiếng Việt KHÔNG DẤU thì engine en-US đọc tốt** (chỉ là chữ Latin). Đo trên máy: "Xin chao Viet Nam" ra chính xác.
+- **CẢNH BÁO — chữ CÓ DẤU không hỏng hẳn mà ra SAI trông hợp lý.** Đo trên máy: "Tiếng Việt có dấu" → `Tiéng Viét cé dä'u`; "Đường Trần Hưng Đạo" → `Dddng Trän Hdng Dao`. Engine thay dấu này bằng dấu khác rồi trả về, không báo lỗi. Nguy hiểm hơn hỏng hẳn: người dùng copy ra tưởng đúng. UI nên nói rõ ngôn ngữ OCR đang dùng để họ tự đánh giá.
 - Tính năng "liệt kê ngôn ngữ OCR" (§5.5) chính là cách app nói thật chuyện này — nó không giấu việc tiếng Việt vắng mặt.
 
 **Nếu sau này cần OCR tiếng Việt thật:** thêm `TesseractTextRecognizer` hiện thực cùng `ITextRecognizer` và cho chọn engine trong settings. Kiến trúc đã sẵn sàng; đây là việc thêm, không phải việc sửa.

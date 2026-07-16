@@ -1,0 +1,10 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="Snaptic.App.Views.ToastWindow"
+        WindowDecorations="None" Topmost="True" ShowInTaskbar="False"
+        SizeToContent="WidthAndHeight" CanResize="False"
+        Background="Transparent" ShowActivated="False">
+  <Border Background="#E6202020" CornerRadius="8" Padding="16,12" MaxWidth="380">
+    <TextBlock Name="MessageText" Foreground="White" TextWrapping="Wrap" FontSize="13" />
+  </Border>
+</Window>

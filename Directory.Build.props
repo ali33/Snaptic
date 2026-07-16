@@ -1,0 +1,18 @@
+<Project>
+
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <LangVersion>latest</LangVersion>
+
+    <!-- Gom mọi output vào artifacts/ thay vì bin|obj rải rác từng project.
+         Tính năng chuẩn của .NET 8+, không phải hack.
+
+         Lý do dùng ở đây: máy này liên tục dính ghost handle "delete-pending" lên
+         obj/**/Snaptic.App.dll — file đã xoá nhưng Windows vẫn giữ chỗ cái tên, nên
+         build sau không tạo lại được. Đổi hẳn đường dẫn là hết đụng cái tên bị ám. -->
+    <UseArtifactsOutput>true</UseArtifactsOutput>
+  </PropertyGroup>
+
+</Project>

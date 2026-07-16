@@ -1,0 +1,31 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="Snaptic.App.Views.GeneratorWindow"
+        Title="Snaptic — Tạo mã"
+        Width="480" SizeToContent="Height"
+        WindowStartupLocation="CenterScreen"
+        CanResize="False">
+  <StackPanel Margin="16" Spacing="12">
+
+    <StackPanel Spacing="4">
+      <TextBlock Text="Định dạng" FontWeight="SemiBold" />
+      <ComboBox Name="FormatCombo" HorizontalAlignment="Stretch" />
+    </StackPanel>
+
+    <StackPanel Spacing="4">
+      <TextBlock Text="Nội dung" FontWeight="SemiBold" />
+      <TextBox Name="ContentInput" AcceptsReturn="True" MinHeight="72"
+               PlaceholderText="Nhập nội dung để tạo mã..." />
+      <TextBlock Name="HintText" Foreground="#DC2626" TextWrapping="Wrap" IsVisible="False" />
+    </StackPanel>
+
+    <Border BorderBrush="#40808080" BorderThickness="1" MinHeight="220" Padding="8">
+      <Image Name="PreviewImage" Stretch="Uniform" />
+    </Border>
+
+    <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
+      <Button Name="CreateButton" Content="Tạo" IsEnabled="False" />
+      <Button Name="CloseButton" Content="Đóng" />
+    </StackPanel>
+  </StackPanel>
+</Window>
