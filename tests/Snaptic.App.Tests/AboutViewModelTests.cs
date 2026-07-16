@@ -1,6 +1,7 @@
 using SkiaSharp;
 using Snaptic.App.ViewModels;
 using Snaptic.Core.Abstractions;
+using Snaptic.Core.Links;
 
 namespace Snaptic.App.Tests;
 
@@ -74,6 +75,18 @@ public class AboutViewModelTests
 
         Assert.Contains("KHÔNG", vm.Disclaimer);
         Assert.Contains("bảo đảm", vm.Disclaimer);
+    }
+
+    [Fact]
+    public void Link_tai_ve_phai_la_http_hoac_https()
+    {
+        // KHÔNG phải nghi thức. Nút Tải về gọi Process.Start với UseShellExecute=true —
+        // chuỗi không phải URL thì shell đem SHELL-EXECUTE nó như đường dẫn file. Sửa
+        // hằng số này thành đường dẫn hay lệnh là biến nút vô hại thành nút chạy thứ
+        // khác. Ràng bằng đúng LinkValidator dùng cho link QR.
+        var vm = new AboutViewModel(new FakeClipboard());
+
+        Assert.True(LinkValidator.IsOpenableUrl(vm.DownloadUrl));
     }
 
     [Fact]

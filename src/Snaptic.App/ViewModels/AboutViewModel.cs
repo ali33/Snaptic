@@ -34,6 +34,14 @@ public sealed class AboutViewModel
     public string Version =>
         Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "1.0.0";
 
+    /// <summary>
+    /// Nơi tải bản đã build sẵn. App KHÔNG tự kiểm tra bản mới: làm vậy là mỗi lần khởi
+    /// động lại gọi mạng ra ngoài sau lưng người dùng, cho một app chạy nền không ai yêu
+    /// cầu điều đó. Mở link để họ tự xem là đủ.
+    /// </summary>
+    public string DownloadUrl =>
+        "https://drive.google.com/drive/folders/1HevjiAIiRL3-hQlgU-BsYlJTZQ059K7I?usp=sharing";
+
     public string Copyright => "Copyright © 2026 Nguyen Duc Son";
 
     /// <summary>

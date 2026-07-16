@@ -12,7 +12,15 @@
         <Image Name="AppIcon" Width="40" Height="40" VerticalAlignment="Center" />
         <StackPanel VerticalAlignment="Center">
           <TextBlock Text="Snaptic" FontSize="22" FontWeight="Bold" />
-          <TextBlock Name="VersionText" Foreground="#6B7280" FontSize="12" />
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <TextBlock Name="VersionText" Foreground="#6B7280" FontSize="12"
+                       VerticalAlignment="Center" />
+            <TextBlock Foreground="#4B5563" FontSize="12" Text="·" VerticalAlignment="Center" />
+            <Button Name="DownloadButton" Content="Trang tải về" FontSize="12"
+                    Background="Transparent" BorderThickness="0" Padding="0"
+                    Foreground="#60A5FA" Cursor="Hand" VerticalAlignment="Center"
+                    ToolTip.Tip="Mở thư mục Google Drive chứa các bản đã xuất bản" />
+          </StackPanel>
         </StackPanel>
       </StackPanel>
 

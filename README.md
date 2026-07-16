@@ -3,6 +3,17 @@
 App tray Windows: chụp vùng màn hình → nhận diện nội dung → hành động theo ngữ cảnh.
 Kèm chiều ngược lại: nhập text → tạo mã QR/barcode.
 
+<p align="center">
+  <a href="https://drive.google.com/drive/folders/1HevjiAIiRL3-hQlgU-BsYlJTZQ059K7I?usp=sharing">
+    <img src="https://img.shields.io/badge/%E2%AC%87%20T%E1%BA%A2I%20SNAPTIC-Google%20Drive-2563EB?style=for-the-badge&labelColor=1E40AF"
+         alt="Tải Snaptic từ Google Drive" height="44">
+  </a>
+</p>
+
+<p align="center">
+  <sub>Windows 10 build 19041+ · x64 · không cần cài .NET · ~230 MB</sub>
+</p>
+
 ## Giới thiệu
 
 **Snaptic** là phần mềm được phát triển và trân trọng dành tặng đồng chí
@@ -24,6 +35,32 @@ chỗ **app hiểu được nội dung nó vừa chụp**.
 - **Tạo mã** — QR, Code128, EAN-13, UPC-A, Code39. Ảnh cập nhật ngay khi gõ.
 - **Khởi động cùng Windows** — mặc định bật ở lần chạy đầu, tắt được trong Cài đặt.
 
+## Tải về
+
+<a href="https://drive.google.com/drive/folders/1HevjiAIiRL3-hQlgU-BsYlJTZQ059K7I?usp=sharing">
+  <img src="https://img.shields.io/badge/%E2%AC%87%20T%E1%BA%A2I%20B%E1%BA%A2N%20M%E1%BB%9AI%20NH%E1%BA%A4T-Google%20Drive-2563EB?style=for-the-badge&labelColor=1E40AF"
+       alt="Tải bản mới nhất từ Google Drive" height="44">
+</a>
+
+Giải nén ra đâu cũng được rồi chạy `Snaptic.App.exe`. Không cần cài .NET: bản này
+**self-contained**, đã gói sẵn runtime — đổi ~230 MB đĩa lấy việc app luôn chạy được kể
+cả khi máy chưa có hoặc gỡ mất .NET. Yêu cầu Windows 10 build 19041 trở lên, x64.
+
+Lần chạy đầu app **tự bật khởi động cùng Windows**. Không muốn thì tắt trong
+**Cài đặt** — app sẽ không tự bật lại.
+
+> **Windows sẽ cảnh báo "Windows protected your PC".**
+> Đây là chuyện bình thường và **đúng như dự kiến**: app không được ký số. Chứng chỉ ký
+> code tốn tiền thuê bao hằng năm, mà Snaptic là phần mềm cá nhân miễn phí — nên đã
+> quyết định không ký. SmartScreen không phát hiện ra điều gì xấu; nó chỉ đơn giản là
+> không biết ai làm ra file này.
+>
+> Muốn chạy: bấm **More info** → **Run anyway**.
+>
+> Nói thẳng: đó chính xác là thứ phần mềm độc hại cũng bảo bạn làm. Nếu bạn không tin
+> tôi thì đừng bấm — hãy [tự build từ mã nguồn](#chạy-từ-mã-nguồn), toàn bộ mã đều
+> nằm ở đây và bạn kiểm được từng dòng.
+
 ## Giới hạn đã biết
 
 - **Chỉ Windows.** Kiến trúc giữ đường sang macOS nhưng chưa hiện thực.
@@ -38,15 +75,20 @@ chỗ **app hiểu được nội dung nó vừa chụp**.
 - **Chỉ mở link http/https.** Mã QR là dữ liệu từ bên ngoài; `file://`, `javascript:`,
   `steam://`, UNC đều bị chặn có chủ đích. Text vẫn copy được bình thường.
 
-## Yêu cầu
+## Chạy từ mã nguồn
 
-- Windows 10 build 19041 trở lên
-- .NET 10 SDK
+Chỉ cần khi bạn muốn tự build. Dùng bản [tải về](#tải-về) thì bỏ qua mục này.
 
-## Chạy
+Yêu cầu: Windows 10 build 19041 trở lên và **.NET 10 SDK**.
 
 ```bash
 dotnet run --project src/Snaptic.App
+```
+
+Tự publish ra bản dùng thật (self-contained, kèm đăng ký khởi động cùng Windows):
+
+```powershell
+.\publish.ps1
 ```
 
 Icon hiện ở khay hệ thống. Windows mặc định **giấu icon tray mới** vào vùng overflow —
