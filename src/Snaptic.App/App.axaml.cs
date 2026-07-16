@@ -244,5 +244,15 @@ public partial class App : Application
 
         window.Show();
     }
-    private void OnSettingsRequested() => Console.WriteLine("TODO Task 16: cài đặt");
+    private void OnSettingsRequested()
+    {
+        var services = _services!;
+        var vm = new ViewModels.SettingsViewModel(
+            services.GetRequiredService<SettingsService>(),
+            services.GetRequiredService<ITextRecognizer>(),
+            services.GetRequiredService<IHotkeyService>(),
+            services.GetRequiredService<IStartupService>());
+
+        new Views.SettingsWindow(vm).Show();
+    }
 }
