@@ -55,6 +55,28 @@ public class AboutViewModelTests
     }
 
     [Fact]
+    public void Co_ban_quyen_va_giay_phep()
+    {
+        // GPL mục 15-16 yêu cầu chương trình tự thông báo giấy phép và miễn trừ
+        // trách nhiệm cho người dùng, không chỉ nằm trong file LICENSE.
+        var vm = new AboutViewModel(new FakeClipboard());
+
+        Assert.Contains("2026", vm.Copyright);
+        Assert.Contains("Nguyen Duc Son", vm.Copyright);
+        Assert.Contains("GPL", vm.License);
+        Assert.Contains("3", vm.License);
+    }
+
+    [Fact]
+    public void Co_mien_tru_trach_nhiem()
+    {
+        var vm = new AboutViewModel(new FakeClipboard());
+
+        Assert.Contains("KHÔNG", vm.Disclaimer);
+        Assert.Contains("bảo đảm", vm.Disclaimer);
+    }
+
+    [Fact]
     public void Phien_ban_khong_rong()
     {
         var vm = new AboutViewModel(new FakeClipboard());

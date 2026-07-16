@@ -32,6 +32,14 @@ public partial class AboutWindow : Window
         HolderText.Text = vm.AccountHolder;
         AccountText.Text = vm.AccountNumberDisplay;
 
+        CopyrightText.Text = vm.Copyright;
+        LicenseText.Text = $"{vm.License}  {vm.LicenseUrl}";
+        DisclaimerText.Text = vm.Disclaimer;
+        LimitsText.Text = vm.KnownLimits;
+        LegalNoteText.Text =
+            "Đây là bản tóm tắt tiếng Việt cho dễ đọc. Văn bản có hiệu lực pháp lý là " +
+            "mục 15, 16 và 17 trong file LICENSE (tiếng Anh).";
+
         CopyAccountButton.Click += (_, _) =>
         {
             try

@@ -35,6 +35,27 @@
         </StackPanel>
       </StackPanel>
 
+      <Separator Margin="0,4" />
+
+      <StackPanel Spacing="2">
+        <TextBlock Name="CopyrightText" Foreground="#9CA3AF" FontSize="12" />
+        <TextBlock Name="LicenseText" Foreground="#9CA3AF" FontSize="12" TextWrapping="Wrap" />
+      </StackPanel>
+
+      <!-- Thu gọn được: bắt đọc tường chữ pháp lý mỗi lần mở Giới thiệu là phản tác
+           dụng — người ta sẽ bỏ qua luôn cả phần đáng đọc. Nhưng vẫn phải có mặt,
+           vì GPL mục 15-16 đòi chương trình tự thông báo. -->
+      <Expander Name="LegalExpander" Header="Miễn trừ trách nhiệm và giới hạn đã biết">
+        <StackPanel Spacing="8" Margin="0,6,0,0">
+          <TextBlock Name="DisclaimerText" TextWrapping="Wrap" FontSize="12"
+                     Foreground="#D1D5DB" LineHeight="18" />
+          <TextBlock Name="LimitsText" TextWrapping="Wrap" FontSize="12"
+                     Foreground="#FBBF24" LineHeight="18" />
+          <TextBlock Name="LegalNoteText" TextWrapping="Wrap" FontSize="11"
+                     Foreground="#6B7280" FontStyle="Italic" />
+        </StackPanel>
+      </Expander>
+
       <Button Name="CloseButton" Content="Đóng" HorizontalAlignment="Left" Margin="0,8,0,0" />
     </StackPanel>
 

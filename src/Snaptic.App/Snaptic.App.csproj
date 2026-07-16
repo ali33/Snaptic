@@ -7,6 +7,15 @@
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Assets/snaptic.ico</ApplicationIcon>
+
+    <Product>Snaptic</Product>
+    <AssemblyTitle>Snaptic</AssemblyTitle>
+    <Company>Nguyen Duc Son</Company>
+    <Authors>Nguyen Duc Son</Authors>
+    <Copyright>Copyright (C) 2026 Nguyen Duc Son</Copyright>
+    <Version>1.0.0</Version>
+    <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
+    <Description>Chụp vùng màn hình, nhận diện QR/barcode/text và tạo mã QR.</Description>
   </PropertyGroup>
 
   <ItemGroup>

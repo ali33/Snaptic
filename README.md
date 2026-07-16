@@ -102,3 +102,50 @@ Quét mã bằng app ngân hàng bất kỳ có hỗ trợ VietQR / napas 247. M
 và nội dung — sửa lại được trước khi xác nhận.
 
 Trong app: **chuột phải icon khay → Giới thiệu...**
+
+## Bản quyền và giấy phép
+
+Copyright © 2026 **Nguyen Duc Son**
+
+Snaptic là phần mềm tự do: bạn được quyền phân phối lại và/hoặc sửa đổi theo các điều
+khoản của **Giấy phép Công cộng GNU (GNU GPL)** do Free Software Foundation công bố,
+phiên bản 3 hoặc (tuỳ bạn chọn) bất kỳ phiên bản nào mới hơn.
+
+Toàn văn giấy phép: [LICENSE](LICENSE) · <https://www.gnu.org/licenses/gpl-3.0.html>
+
+### Vì sao GPL-3.0 chứ không phải GPL-2.0
+
+Không phải lựa chọn tuỳ hứng — thư viện quyết định:
+
+| Thư viện | Giấy phép | Tương thích |
+|---|---|---|
+| Avalonia | MIT | GPLv2 và GPLv3 |
+| SkiaSharp | MIT | GPLv2 và GPLv3 |
+| ZXing.Net | Apache-2.0 | **chỉ GPLv3** |
+
+Apache-2.0 **không tương thích ngược với GPLv2**, nên phát hành Snaptic dưới GPLv2 sẽ
+là vi phạm giấy phép của ZXing.Net.
+
+## Miễn trừ trách nhiệm
+
+Phần mềm này được cung cấp **"NGUYÊN TRẠNG" (AS IS)**, **KHÔNG KÈM BẤT KỲ BẢO ĐẢM NÀO**,
+dù rõ ràng hay ngụ ý, bao gồm nhưng không giới hạn ở các bảo đảm về khả năng bán được,
+tính phù hợp cho một mục đích cụ thể, và không vi phạm quyền của bên thứ ba.
+
+Trong mọi trường hợp, tác giả **không chịu trách nhiệm** với bất kỳ khiếu nại, thiệt hại
+hay nghĩa vụ nào phát sinh từ việc sử dụng phần mềm — kể cả mất mát dữ liệu, gián đoạn
+công việc, hay thiệt hại gián tiếp.
+
+**Bạn chịu toàn bộ rủi ro về chất lượng và hiệu năng khi sử dụng.**
+
+Cụ thể với Snaptic, một số giới hạn đã biết mà bạn cần lưu ý:
+
+- **OCR tiếng Việt có dấu cho kết quả SAI mà trông hợp lý** (xem mục Giới hạn đã biết).
+  Không được dùng kết quả OCR cho mục đích cần độ chính xác mà không kiểm lại bằng mắt.
+- **Ảnh chụp có thể chứa thông tin nhạy cảm.** Snaptic không kiểm duyệt nội dung bạn
+  chụp, copy hay lưu.
+- **Mã QR là dữ liệu từ nguồn không tin cậy.** Snaptic chỉ mở link `http`/`https` và
+  chặn các scheme khác, nhưng điều đó **không đảm bảo** trang web đích an toàn.
+
+Đây là bản tóm tắt tiếng Việt cho dễ đọc. Văn bản có hiệu lực pháp lý là **mục 15, 16 và
+17** trong [LICENSE](LICENSE) (tiếng Anh).
