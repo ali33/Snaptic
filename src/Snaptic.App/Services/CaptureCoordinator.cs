@@ -1,4 +1,3 @@
-using SkiaSharp;
 using Snaptic.App.Views;
 using Snaptic.Core.Abstractions;
 using Snaptic.Core.Display;
@@ -43,7 +42,7 @@ public sealed class CaptureCoordinator
             // OverlayWindow đổi sang Bitmap của Avalonia ngay trong ctor nên giải phóng
             // được luôn. Không dispose ở đây là rò vài MB MỖI LẦN chụp — app này nằm
             // tray cả ngày nên chỗ rò đó cộng dồn rất nhanh.
-            using var slice = CropToRect(frozen, monitor.PhysicalBounds, originX, originY);
+            using var slice = ImageCropper.Crop(frozen, monitor.PhysicalBounds, originX, originY);
             var overlay = new OverlayWindow(slice, monitor);
 
             overlay.SelectionMade += (a, b) => tcs.TrySetResult((a, b));
@@ -69,7 +68,7 @@ public sealed class CaptureCoordinator
             if (rect.Width < MinimumSizePx || rect.Height < MinimumSizePx)
                 return null;
 
-            return new CaptureResult(CropToRect(frozen, rect, originX, originY), DateTimeOffset.Now);
+            return new CaptureResult(ImageCropper.Crop(frozen, rect, originX, originY), DateTimeOffset.Now);
         }
         finally
         {
@@ -80,21 +79,4 @@ public sealed class CaptureCoordinator
         }
     }
 
-    private static SKBitmap CropToRect(SKBitmap source, PhysicalRect rect, int originX, int originY)
-    {
-        // Đổi từ toạ độ desktop ảo sang toạ độ trong ảnh đóng băng.
-        var x = rect.X - originX;
-        var y = rect.Y - originY;
-
-        // Kẹp vào biên ảnh — vùng chọn có thể tràn ra vùng không thuộc monitor nào
-        // (desktop ảo là hình chữ nhật nhưng các màn có thể xếp so le).
-        x = Math.Clamp(x, 0, Math.Max(0, source.Width - 1));
-        y = Math.Clamp(y, 0, Math.Max(0, source.Height - 1));
-        var w = Math.Clamp(rect.Width, 1, source.Width - x);
-        var h = Math.Clamp(rect.Height, 1, source.Height - y);
-
-        var result = new SKBitmap(w, h);
-        source.ExtractSubset(result, new SKRectI(x, y, x + w, y + h));
-        return result;
-    }
 }
