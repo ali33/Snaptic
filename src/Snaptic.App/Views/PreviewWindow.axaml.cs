@@ -15,6 +15,9 @@ public partial class PreviewWindow : Window
     private readonly CancellationTokenSource _recognitionCts = new();
     private Task _recognitionTask = Task.CompletedTask;
 
+    /// <summary>Người dùng muốn chụp lại. App đóng cửa sổ này rồi mở lại overlay.</summary>
+    public event Action? RecaptureRequested;
+
     /// <summary>Ctor rỗng cho XAML designer — không dùng lúc chạy.</summary>
     public PreviewWindow() : this(null) { }
 
@@ -28,6 +31,7 @@ public partial class PreviewWindow : Window
         DataContext = vm;
         PreviewImage.Source = ToAvaloniaBitmap(vm.Image);
 
+        RecaptureButton.Click += (_, _) => RecaptureRequested?.Invoke();
         CopyImageButton.Click += (_, _) => Guard(vm.CopyImage);
         CopyDataUriButton.Click += (_, _) => Guard(vm.CopyDataUri);
         CopyCodeButton.Click += (_, _) => Guard(vm.CopyCode);

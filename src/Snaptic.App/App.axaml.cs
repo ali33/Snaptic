@@ -99,6 +99,13 @@ public partial class App : Application
             "Vẫn chụp được từ menu tray.");
     }
 
+    /// <summary>
+    /// Chờ thêm sau khi sự kiện Closed đã nổ, cho DWM vẽ xong khung hình không còn
+    /// cửa sổ. Windows không có API nào báo "đã composite xong" nên đành chờ theo thời
+    /// gian — nhưng chỉ sau khi Closed đã nổ, chứ không phải ngay sau Close().
+    /// </summary>
+    private const int CompositorSettleMs = 250;
+
     private bool _capturing;
 
     private async void OnCaptureRequested()
@@ -148,6 +155,27 @@ public partial class App : Application
             settings);
 
         var window = new Views.PreviewWindow(vm);
+
+        window.RecaptureRequested += async () =>
+        {
+            // Đóng cửa sổ TRƯỚC khi chụp lại. App đóng băng màn hình khi chụp, nên
+            // preview còn hiện là nó TỰ LỌT VÀO ảnh mới. Đã xảy ra thật khi thi công.
+            //
+            // Close() trả về NGAY, nhưng cửa sổ chưa biến mất: Avalonia huỷ nó ở nhịp
+            // dispatcher sau, rồi DWM còn cần thêm vài khung hình nữa mới xoá khỏi màn
+            // hình thật. Nên phải đợi ĐÚNG sự kiện Closed trước, sau đó mới chờ thêm
+            // cho compositor bắt kịp. Chờ mù bằng Task.Delay ngay sau Close() là không
+            // đủ — bản đầu dùng 150ms và preview vẫn lọt vào ảnh.
+            var closed = new TaskCompletionSource();
+            window.Closed += (_, _) => closed.TrySetResult();
+            window.Close();
+            await closed.Task;
+
+            await Task.Delay(CompositorSettleMs);
+
+            OnCaptureRequested();
+        };
+
         window.Show();
 
         // Chạy nhận diện SAU khi cửa sổ đã hiện — không để OCR làm khựng.
