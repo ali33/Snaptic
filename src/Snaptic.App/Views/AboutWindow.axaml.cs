@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
@@ -32,6 +33,14 @@ public partial class AboutWindow : Window
         HolderText.Text = vm.AccountHolder;
         AccountText.Text = vm.AccountNumberDisplay;
 
+        CopyrightText.Text = vm.Copyright;
+        LicenseText.Text = $"{vm.License}  {vm.LicenseUrl}";
+        DisclaimerText.Text = vm.Disclaimer;
+        LimitsText.Text = vm.KnownLimits;
+        LegalNoteText.Text =
+            "Đây là bản tóm tắt tiếng Việt cho dễ đọc. Văn bản có hiệu lực pháp lý là " +
+            "mục 15, 16 và 17 trong file LICENSE (tiếng Anh).";
+
         CopyAccountButton.Click += (_, _) =>
         {
             try
@@ -43,6 +52,20 @@ public partial class AboutWindow : Window
             {
                 // Clipboard bị app khác giữ — lỗi có thật, không được để sập cửa sổ.
                 ToastWindow.Show(this, ex.Message);
+            }
+        };
+
+        DownloadButton.Click += (_, _) =>
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo(vm.DownloadUrl) { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                // Không có trình duyệt mặc định, hoặc shell từ chối. Hiếm, nhưng để nó
+                // ném ra là sập cả cửa sổ Giới thiệu chỉ vì một cái link.
+                ToastWindow.Show(this, $"Không mở được trình duyệt: {ex.Message}");
             }
         };
 

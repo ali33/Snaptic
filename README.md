@@ -3,6 +3,17 @@
 App tray Windows: chụp vùng màn hình → nhận diện nội dung → hành động theo ngữ cảnh.
 Kèm chiều ngược lại: nhập text → tạo mã QR/barcode.
 
+<p align="center">
+  <a href="https://drive.google.com/drive/folders/1HevjiAIiRL3-hQlgU-BsYlJTZQ059K7I?usp=sharing">
+    <img src="https://img.shields.io/badge/%E2%AC%87%20T%E1%BA%A2I%20SNAPTIC-Google%20Drive-2563EB?style=for-the-badge&labelColor=1E40AF"
+         alt="Tải Snaptic từ Google Drive" height="44">
+  </a>
+</p>
+
+<p align="center">
+  <sub>Windows 10 build 19041+ · x64 · không cần cài .NET · tải 75 MB</sub>
+</p>
+
 ## Giới thiệu
 
 **Snaptic** là phần mềm được phát triển và trân trọng dành tặng đồng chí
@@ -24,6 +35,38 @@ chỗ **app hiểu được nội dung nó vừa chụp**.
 - **Tạo mã** — QR, Code128, EAN-13, UPC-A, Code39. Ảnh cập nhật ngay khi gõ.
 - **Khởi động cùng Windows** — mặc định bật ở lần chạy đầu, tắt được trong Cài đặt.
 
+## Tải về
+
+<a href="https://drive.google.com/drive/folders/1HevjiAIiRL3-hQlgU-BsYlJTZQ059K7I?usp=sharing">
+  <img src="https://img.shields.io/badge/%E2%AC%87%20T%E1%BA%A2I%20B%E1%BA%A2N%20M%E1%BB%9AI%20NH%E1%BA%A4T-Google%20Drive-2563EB?style=for-the-badge&labelColor=1E40AF"
+       alt="Tải bản mới nhất từ Google Drive" height="44">
+</a>
+
+Vào thư mục phiên bản (ví dụ `1.0.0`) → tải `Snaptic Windows x64.zip` → giải nén ra đâu
+cũng được → chạy `Snaptic.App.exe`.
+
+Tải về **75 MB**, giải nén ra **~230 MB**. Không cần cài .NET: bản này **self-contained**,
+đã gói sẵn runtime — đổi chỗ trên đĩa lấy việc app luôn chạy được kể cả khi máy chưa có
+hoặc gỡ mất .NET. Yêu cầu Windows 10 build 19041 trở lên, x64.
+
+Google Drive sẽ báo **"Google Drive can't scan this file for viruses"** — mọi file trên
+25 MB đều bị vậy, không phải dấu hiệu file có vấn đề. Bấm **Download anyway**.
+
+Lần chạy đầu app **tự bật khởi động cùng Windows**. Không muốn thì tắt trong
+**Cài đặt** — app sẽ không tự bật lại.
+
+> **Windows sẽ cảnh báo "Windows protected your PC".**
+> Đây là chuyện bình thường và **đúng như dự kiến**: app không được ký số. Chứng chỉ ký
+> code tốn tiền thuê bao hằng năm, mà Snaptic là phần mềm cá nhân miễn phí — nên đã
+> quyết định không ký. SmartScreen không phát hiện ra điều gì xấu; nó chỉ đơn giản là
+> không biết ai làm ra file này.
+>
+> Muốn chạy: bấm **More info** → **Run anyway**.
+>
+> Nói thẳng: đó chính xác là thứ phần mềm độc hại cũng bảo bạn làm. Nếu bạn không tin
+> tôi thì đừng bấm — hãy [tự build từ mã nguồn](#chạy-từ-mã-nguồn), toàn bộ mã đều
+> nằm ở đây và bạn kiểm được từng dòng.
+
 ## Giới hạn đã biết
 
 - **Chỉ Windows.** Kiến trúc giữ đường sang macOS nhưng chưa hiện thực.
@@ -38,15 +81,20 @@ chỗ **app hiểu được nội dung nó vừa chụp**.
 - **Chỉ mở link http/https.** Mã QR là dữ liệu từ bên ngoài; `file://`, `javascript:`,
   `steam://`, UNC đều bị chặn có chủ đích. Text vẫn copy được bình thường.
 
-## Yêu cầu
+## Chạy từ mã nguồn
 
-- Windows 10 build 19041 trở lên
-- .NET 10 SDK
+Chỉ cần khi bạn muốn tự build. Dùng bản [tải về](#tải-về) thì bỏ qua mục này.
 
-## Chạy
+Yêu cầu: Windows 10 build 19041 trở lên và **.NET 10 SDK**.
 
 ```bash
 dotnet run --project src/Snaptic.App
+```
+
+Tự publish ra bản dùng thật (self-contained, kèm đăng ký khởi động cùng Windows):
+
+```powershell
+.\publish.ps1
 ```
 
 Icon hiện ở khay hệ thống. Windows mặc định **giấu icon tray mới** vào vùng overflow —
@@ -102,3 +150,50 @@ Quét mã bằng app ngân hàng bất kỳ có hỗ trợ VietQR / napas 247. M
 và nội dung — sửa lại được trước khi xác nhận.
 
 Trong app: **chuột phải icon khay → Giới thiệu...**
+
+## Bản quyền và giấy phép
+
+Copyright © 2026 **Nguyen Duc Son**
+
+Snaptic là phần mềm tự do: bạn được quyền phân phối lại và/hoặc sửa đổi theo các điều
+khoản của **Giấy phép Công cộng GNU (GNU GPL)** do Free Software Foundation công bố,
+phiên bản 3 hoặc (tuỳ bạn chọn) bất kỳ phiên bản nào mới hơn.
+
+Toàn văn giấy phép: [LICENSE](LICENSE) · <https://www.gnu.org/licenses/gpl-3.0.html>
+
+### Vì sao GPL-3.0 chứ không phải GPL-2.0
+
+Không phải lựa chọn tuỳ hứng — thư viện quyết định:
+
+| Thư viện | Giấy phép | Tương thích |
+|---|---|---|
+| Avalonia | MIT | GPLv2 và GPLv3 |
+| SkiaSharp | MIT | GPLv2 và GPLv3 |
+| ZXing.Net | Apache-2.0 | **chỉ GPLv3** |
+
+Apache-2.0 **không tương thích ngược với GPLv2**, nên phát hành Snaptic dưới GPLv2 sẽ
+là vi phạm giấy phép của ZXing.Net.
+
+## Miễn trừ trách nhiệm
+
+Phần mềm này được cung cấp **"NGUYÊN TRẠNG" (AS IS)**, **KHÔNG KÈM BẤT KỲ BẢO ĐẢM NÀO**,
+dù rõ ràng hay ngụ ý, bao gồm nhưng không giới hạn ở các bảo đảm về khả năng bán được,
+tính phù hợp cho một mục đích cụ thể, và không vi phạm quyền của bên thứ ba.
+
+Trong mọi trường hợp, tác giả **không chịu trách nhiệm** với bất kỳ khiếu nại, thiệt hại
+hay nghĩa vụ nào phát sinh từ việc sử dụng phần mềm — kể cả mất mát dữ liệu, gián đoạn
+công việc, hay thiệt hại gián tiếp.
+
+**Bạn chịu toàn bộ rủi ro về chất lượng và hiệu năng khi sử dụng.**
+
+Cụ thể với Snaptic, một số giới hạn đã biết mà bạn cần lưu ý:
+
+- **OCR tiếng Việt có dấu cho kết quả SAI mà trông hợp lý** (xem mục Giới hạn đã biết).
+  Không được dùng kết quả OCR cho mục đích cần độ chính xác mà không kiểm lại bằng mắt.
+- **Ảnh chụp có thể chứa thông tin nhạy cảm.** Snaptic không kiểm duyệt nội dung bạn
+  chụp, copy hay lưu.
+- **Mã QR là dữ liệu từ nguồn không tin cậy.** Snaptic chỉ mở link `http`/`https` và
+  chặn các scheme khác, nhưng điều đó **không đảm bảo** trang web đích an toàn.
+
+Đây là bản tóm tắt tiếng Việt cho dễ đọc. Văn bản có hiệu lực pháp lý là **mục 15, 16 và
+17** trong [LICENSE](LICENSE) (tiếng Anh).
