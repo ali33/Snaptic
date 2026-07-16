@@ -1,0 +1,106 @@
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Markup.Xaml;
+using Avalonia.Platform;
+using Avalonia.Threading;
+using Microsoft.Extensions.DependencyInjection;
+using Snaptic.Core.Abstractions;
+using Snaptic.Core.Settings;
+
+namespace Snaptic.App;
+
+public partial class App : Application
+{
+    private IServiceProvider? _services;
+    private TrayIcon? _trayIcon;
+    private IHotkeyService? _hotkey;
+
+    public override void Initialize() => AvaloniaXamlLoader.Load(this);
+
+    public override void OnFrameworkInitializationCompleted()
+    {
+        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            // App tray: không có cửa sổ chính. Đóng hết cửa sổ KHÔNG được thoát app,
+            // chỉ menu Thoát mới được.
+            desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+
+            _services = ServiceRegistration.Build();
+            var settings = _services.GetRequiredService<SettingsService>().Load();
+
+            SetupTray(desktop);
+            SetupHotkey(settings.Hotkey);
+        }
+
+        base.OnFrameworkInitializationCompleted();
+    }
+
+    private void SetupTray(IClassicDesktopStyleApplicationLifetime desktop)
+    {
+        var menu = new NativeMenu();
+
+        var captureItem = new NativeMenuItem("Chụp màn hình");
+        captureItem.Click += (_, _) => OnCaptureRequested();
+        menu.Add(captureItem);
+
+        var qrItem = new NativeMenuItem("Tạo QR...");
+        qrItem.Click += (_, _) => OnGenerateRequested();
+        menu.Add(qrItem);
+
+        var barcodeItem = new NativeMenuItem("Tạo Barcode...");
+        barcodeItem.Click += (_, _) => OnGenerateRequested();
+        menu.Add(barcodeItem);
+
+        menu.Add(new NativeMenuItemSeparator());
+
+        var settingsItem = new NativeMenuItem("Cài đặt...");
+        settingsItem.Click += (_, _) => OnSettingsRequested();
+        menu.Add(settingsItem);
+
+        var exitItem = new NativeMenuItem("Thoát");
+        exitItem.Click += (_, _) => Shutdown(desktop);
+        menu.Add(exitItem);
+
+        _trayIcon = new TrayIcon
+        {
+            Icon = new WindowIcon(AssetLoader.Open(new Uri("avares://Snaptic.App/Assets/snaptic.ico"))),
+            ToolTipText = "Snaptic",
+            Menu = menu,
+            IsVisible = true
+        };
+    }
+
+    private void Shutdown(IClassicDesktopStyleApplicationLifetime desktop)
+    {
+        // Thứ tự quan trọng: nhả phím tắt và gỡ icon TRƯỚC khi tắt, nếu không icon
+        // có thể còn nằm lại ở khay như một xác chết cho tới khi rê chuột qua.
+        _hotkey?.Dispose();
+        _trayIcon?.Dispose();
+        _trayIcon = null;
+        desktop.Shutdown();
+    }
+
+    private void SetupHotkey(HotkeyCombo combo)
+    {
+        _hotkey = _services!.GetRequiredService<IHotkeyService>();
+
+        // Sự kiện này phát trên LUỒNG NỀN của WindowsHotkey — phải chuyển về luồng UI
+        // trước khi đụng vào bất cứ thứ gì của Avalonia.
+        _hotkey.Pressed += (_, _) => Dispatcher.UIThread.Post(OnCaptureRequested);
+
+        if (_hotkey.TryRegister(combo))
+            return;
+
+        // Tổ hợp bị app khác chiếm. App VẪN CHẠY và vẫn chụp được từ menu tray —
+        // phím tắt hỏng không phải lý do từ chối khởi động. Task 17 thay bằng toast.
+        Console.Error.WriteLine(
+            $"Không đăng ký được phím tắt {combo} — có ứng dụng khác đang dùng. " +
+            "Vẫn chụp được từ menu tray.");
+    }
+
+    // Ba hàm dưới được nối vào ở Task 13, 15, 16.
+    private void OnCaptureRequested() => Console.WriteLine("TODO Task 13: chụp màn hình");
+    private void OnGenerateRequested() => Console.WriteLine("TODO Task 15: tạo mã");
+    private void OnSettingsRequested() => Console.WriteLine("TODO Task 16: cài đặt");
+}
